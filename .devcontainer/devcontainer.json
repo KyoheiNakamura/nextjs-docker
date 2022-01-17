@@ -1,0 +1,33 @@
+{
+  "name": "nextjs-docker-container",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "frontend",
+  "workspaceFolder": "/frontend",
+  "extensions": [
+    "graphql.vscode-graphql",
+    "dsznajder.es7-react-js-snippets",
+    "nucllear.vscode-extension-auto-import",
+    "streetsidesoftware.code-spell-checker",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "visualstudioexptteam.vscodeintellicode",
+    "mosapride.zenkaku",
+    "pranaygp.vscode-css-peek",
+    "heybourn.headwind",
+    "vincaslt.highlight-matching-tag",
+    "ecmel.vscode-html-css",
+    "mkaufman.htmlhint",
+    "bradlc.vscode-tailwindcss",
+    "austenc.tailwind-docs"
+  ],
+  "settings": {
+    "editor.formatOnPaste": true,
+    "files.autoSave": "onFocusChange",
+    "editor.wordWrap": "on",
+    "editor.formatOnSave": true,
+    "editor.minimap.enabled": false,
+    "editor.tabSize": 2,
+    "indentRainbow.ignoreLinePatterns": ["/[ \t]* [*]/g", "/[ \t]+[/]{2}/g"]
+  }
+  // "shutdownAction": "stopCompose"
+}

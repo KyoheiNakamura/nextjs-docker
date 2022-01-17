@@ -1,0 +1,120 @@
+version: "3.9"
+
+# x-environment: &environment
+  # NODE_ENV: development
+
+services:
+  # db:
+  #   image: mysql:8.0.27
+  #   platform: linux/x86_64
+  #   container_name: db
+  #   environment:
+  #     MYSQL_DATABASE: ${DB_NAME}
+  #     MYSQL_USER: ${DB_USER}
+  #     MYSQL_PASSWORD: ${DB_PASS}
+  #     MYSQL_ROOT_PASSWORD: ${DB_PASS}
+  #     TZ: ${TZ}
+  #   restart: always
+  #   healthcheck:
+  #     test: mysqladmin ping -h db -u${DB_USER} -p${DB_PASS}
+  #     interval: 10s
+  #     timeout: 10s
+  #     retries: 5
+  #     start_period: 40s
+  #   ports:
+  #     - "${DB_PORT}:3306"
+  #   volumes:
+  #     - db-store:/var/lib/mysql
+  #     - ./logs:/var/log/mysql
+  #     - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    container_name: frontend
+    tty: true
+    environment:
+      # << : *environment
+      FRONTEND_PORT: ${FRONTEND_PORT}
+      DATABASE_URL: ${DATABASE_URL}
+    ports:
+      - "${FRONTEND_PORT}:3000"
+      - "${STUDIO_PORT}:5555"
+    volumes:
+      - .:/frontend:cached
+      - /frontend/node_modules
+    # depends_on:
+    #   backend:
+    #     condition: service_healthy
+    command: npm run dev
+    # command: npx next dev -p ${FRONTEND_PORT}
+
+# volumes:
+#   db-store:
+
+# https://zenn.dev/nori_k/articles/45399999ff39f2
+# https://zenn.dev/mikan3rd/articles/5b7840cdbcd2d9#docker-%2F-docker-compose
+
+
+# x-dev-base: &dev-base
+#   build: .
+#   environment:
+#     DB_HOST: mysql
+#     DB_PORT: 3306
+#     DB_USERNAME: docker
+#     DB_PASSWORD: docker
+#     DB_NAME: nest_next_sample
+#     SERVER_APOLLO_URI: http://backend:3300
+#     PUBLIC_APOLLO_URI: http://localhost:3300
+#   volumes:
+#     - .:/app
+#     - /app/node_modules
+#     - /app/packages/backend/node_modules
+#     - /app/packages/frontend/node_modules
+
+# services:
+
+#   mysql:
+#     image: mysql:5.7
+#     command: mysqld
+#     environment:
+#       MYSQL_ROOT_PASSWORD: root
+#       MYSQL_USER: docker
+#       MYSQL_PASSWORD: docker
+#       MYSQL_DATABASE: nest_next_sample
+#       TZ: 'Asia/Tokyo'
+#     ports:
+#       - 4306:3306
+#     volumes:
+#       - ./docker/db/data:/var/lib/mysql
+#       - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
+
+#   migrate:
+#     << : *dev-base
+#     working_dir: /app/packages/backend
+#     command: yarn migrate:run
+#     depends_on:
+#       - mysql
+
+#   backend:
+#     << : *dev-base
+#     working_dir: /app/packages/backend
+#     command: yarn start:dev
+#     tty: true
+#     depends_on:
+#       - mysql
+#       - migrate
+#     ports:
+#       - "3300:3300"
+
+#   frontend:
+#     << : *dev-base
+#     working_dir: /app/packages/frontend
+#     command: yarn dev
+#     tty: true
+#     depends_on:
+#       - backend
+#     ports:
+#       - "3000:3000"
